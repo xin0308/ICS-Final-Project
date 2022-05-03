@@ -226,6 +226,15 @@ class Server:
             read, write, error = select.select(self.all_sockets, [], [])
             print('checking logged clients..')
             for logc in list(self.logged_name2sock.values()):
+                if self.count>=1:
+                    while len(self.connection)<2:
+                        conn,addr=self.game_server.accept()
+                        self.connection.append(conn)
+                while len(self.connection)==2:
+                    try:
+                        self.game()
+                    except:
+                        break
                 if logc in read:
                     self.handle_msg(logc)
             print('checking new clients..')
